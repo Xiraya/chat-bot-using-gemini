@@ -11,11 +11,12 @@ import io
 
 genai.configure(api_key='AIzaSyAwuVTBm8qQnV4aJL-KbElV2jTvQOZC7aQ')
 
+
 with st.sidebar:
     selected= option_menu(
         menu_title=None,
         options=['Text to Text','Image to Text','About'],
-        icons=['balloon-fill','balloon-fill','balloon-fill'],
+        icons=['keyboard','image','info-circle'],
         default_index=0
     )
 
@@ -24,7 +25,7 @@ if selected=='Text to Text':
 
   if "chat" not in st.session_state:
       st.session_state.chat = model.start_chat(history = [])
-  st.title('Welcome to Chat assistant')
+  st.title('Welcome to IT Chat Support.💻🔎')
 
   def role_to_streamlit(role):
       if role=='model':
@@ -36,7 +37,7 @@ if selected=='Text to Text':
       with st.chat_message(role_to_streamlit(message.role)):
           st.markdown(message.parts[0].text)
           
-  if prompt := st.chat_input("What can I do for you?"):
+  if prompt := st.chat_input("What is your query?"):
       st.chat_message('user').markdown(prompt)
       response = st.session_state.chat.send_message(prompt) 
       
@@ -49,7 +50,7 @@ if selected == 'Image to Text':
   #if "chat" not in st.session_state:
     #st.session_state.chat = model.start_chat(history=[])
 
-  st.title('Welcome to Chat assistant')
+  st.title('Welcome to Chat Support.💻🔎')
 
   def role_to_streamlit(role):
       if role == 'model':
@@ -72,7 +73,7 @@ if selected == 'Image to Text':
   uploaded_file = st.file_uploader("Upload an image", type=['jpg', 'jpeg', 'png'], key="file_uploader")
 
 
-  if prompt := st.chat_input("What can I do for you?"):
+  if prompt := st.chat_input("What is your query?"):
         image = Image.open(uploaded_file)
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
@@ -86,3 +87,30 @@ if selected == 'Image to Text':
 
         with st.chat_message("assistant"):
             st.markdown(response)
+            
+if selected == "About":
+    st.title("Chat bot for IT support  🐥")
+    st.image('Cipher thugs.jpeg', caption='Cipher thugs 👾')
+    st.subheader('DEVELOPED BY')
+    st.markdown(
+        """
+        
+        - 🧑‍💻Srivarsen R 
+        - 🧑‍💻Shyam TR 
+        - 🧑‍💻Nakulan T 
+        
+         
+        
+        """
+    )
+    st.markdown("                                 ")
+    st.subheader("LANGUAGE USED : ")
+    st.markdown("""- Python
+                """)
+    st.markdown("                                 ")
+
+    git='https://github.com/TRshyam/hackathon'
+    st.subheader("🤖[Click here for Project Source code](%s)🤖"%git)
+
+
+    st.caption("Thank you for visiting this page 🤓")
