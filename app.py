@@ -90,7 +90,7 @@ if selected == 'Image to Text':
             
 if selected == "About":
     st.title("Chat bot for IT support  🐥")
-    st.subheader("Cipher thugs 👾")
+    st.image('Cipher thugs.jpeg', caption='Cipher thugs 👾')
     st.markdown(
         """
         Developed by:
