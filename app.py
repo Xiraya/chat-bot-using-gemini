@@ -1,41 +1,88 @@
+import streamlit as st
+from streamlit_option_menu import option_menu
 import os
 import textwrap
 from IPython.display import display
 from IPython.display import Markdown
 import streamlit as st
 import google.generativeai as genai
+from PIL import Image
+import io
 
 genai.configure(api_key='AIzaSyAwuVTBm8qQnV4aJL-KbElV2jTvQOZC7aQ')
-tmodel = genai.GenerativeModel('gemini-pro')
-imodel = genai.GenerativeModel('gemini-pro-vision')
 
-if "chat" not in st.session_state:
-    st.session_state.chat = model.start_chat(history = [])
-st.title('Welcome to Chat assistant')
+with st.sidebar:
+    selected= option_menu(
+        menu_title=None,
+        options=['Text to Text','Image to Text','About'],
+        icons=['balloon-fill','balloon-fill','balloon-fill'],
+        default_index=0
+    )
 
-def role_to_streamlit(role):
-    if role=='model':
-        return 'assistant'
-    else:
-         return role
-    
-def get_gemini_response(input,image):
-    if input!="" and image!="":
-       response = imodel.generate_content([input,image])
-    elif image!="" and text=="":
-        response=imodel.generate_content(image)
-    else:
-       response = tmodel.generate_content(input)
-    return response.text
+if selected=='Text to Text':
+  model = genai.GenerativeModel('gemini-pro')
 
-for message in st.session_state.chat.history:
-    with st.chat_message(role_to_streamlit(message.role)):
-        st.markdown(message.parts[0].text)
-   
-        
-if prompt := st.chat_input("What can I do for you?") or image := st.file_uploader("upload an image", type=['jpg','jpeg','png']):
-    st.chat_message('user').markdown(prompt)
-    response = st.session_state.chat.send_message(prompt) 
-    
-    with st.chat_message("assistant"):
-	    st.markdown(response.text)
+  if "chat" not in st.session_state:
+      st.session_state.chat = model.start_chat(history = [])
+  st.title('Welcome to Chat assistant')
+
+  def role_to_streamlit(role):
+      if role=='model':
+          return 'assistant'
+      else:
+          return role
+
+  for message in st.session_state.chat.history:
+      with st.chat_message(role_to_streamlit(message.role)):
+          st.markdown(message.parts[0].text)
+          
+  if prompt := st.chat_input("What can I do for you?"):
+      st.chat_message('user').markdown(prompt)
+      response = st.session_state.chat.send_message(prompt) 
+      
+      with st.chat_message("assistant"):
+        st.markdown(response.text)
+
+if selected == 'Image to Text':
+  model = genai.GenerativeModel('gemini-pro-vision')
+
+  #if "chat" not in st.session_state:
+    #st.session_state.chat = model.start_chat(history=[])
+
+  st.title('Welcome to Chat assistant')
+
+  def role_to_streamlit(role):
+      if role == 'model':
+          return 'assistant'
+      else:
+          return role
+
+  def get_gemini_response(input,image):
+      if input!="":
+        response = model.generate_content([input,image])
+      else:
+        response = model.generate_content(image)
+      return response.text
+
+  #for message in st.session_state.chat.history:
+      # with st.chat_message(role_to_streamlit(message.role)):
+      #     st.markdown(message.parts[0].text)
+
+
+  uploaded_file = st.file_uploader("Upload an image", type=['jpg', 'jpeg', 'png'], key="file_uploader")
+
+
+  if prompt := st.chat_input("What can I do for you?"):
+        image = Image.open(uploaded_file)
+        st.image(image, caption="Uploaded Image", use_column_width=True)
+
+        st.chat_message('user').markdown(prompt)
+
+        image_bytes = io.BytesIO()
+        image.save(image_bytes, format='PNG')
+        image_bytes = image_bytes.getvalue()
+
+        response = get_gemini_response(prompt,image)  # Assuming send_message can handle bytes
+
+        with st.chat_message("assistant"):
+            st.markdown(response)
