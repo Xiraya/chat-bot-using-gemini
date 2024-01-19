@@ -11,7 +11,8 @@ import io
 
 genai.configure(api_key='AIzaSyAwuVTBm8qQnV4aJL-KbElV2jTvQOZC7aQ')
 
-
+st.set_page_config(page_title='Chat assistant for IT Support',
+                   page_icon='🧑‍💻')
 with st.sidebar:
     selected= option_menu(
         menu_title=None,
