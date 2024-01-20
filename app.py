@@ -11,7 +11,7 @@ import io
 
 genai.configure(api_key='AIzaSyAwuVTBm8qQnV4aJL-KbElV2jTvQOZC7aQ')
 
-st.set_page_config(page_title='Chat assistant for IT Support',
+st.set_page_config(page_title='Welcome to Chat Bot',
                    page_icon='🧑‍💻')
 with st.sidebar:
     selected= option_menu(
@@ -26,7 +26,7 @@ if selected=='Text to Text':
 
   if "chat" not in st.session_state:
       st.session_state.chat = model.start_chat(history = [])
-  st.title('Welcome to IT Chat Support.💻🔎')
+  st.title('Welcome to Chat bot💻🔎')
 
   def role_to_streamlit(role):
       if role=='model':
@@ -51,7 +51,7 @@ if selected == 'Image to Text':
   #if "chat" not in st.session_state:
     #st.session_state.chat = model.start_chat(history=[])
 
-  st.title('Welcome to Chat Support.💻🔎')
+  st.title('Welcome to Chat bot.💻🔎')
 
   def role_to_streamlit(role):
       if role == 'model':
